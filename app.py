@@ -48,7 +48,7 @@ rooms_data = [
 menu_items = [
     {
         "id": 1,
-        "name": "Gloria Signature Breakfast",
+        "name": "Park Palace Signature Breakfast",
         "description": "Traditional breakfast with eggs benedict, artisan breads, fresh fruits, and premium coffee",
         "price": "28.00",
         "category": "breakfast",
@@ -88,7 +88,7 @@ menu_items = [
     },
     {
         "id": 5,
-        "name": "Gloria Wagyu Steak",
+        "name": "Park Palace Wagyu Steak",
         "description": "Premium A5 Wagyu beef with roasted potatoes, seasonal vegetables, and red wine reduction",
         "price": "85.00",
         "category": "dinner",
@@ -108,7 +108,7 @@ menu_items = [
     },
     {
         "id": 7,
-        "name": "Gloria Signature Cocktail",
+        "name": "Park Palace Signature Cocktail",
         "description": "Premium gin, elderflower, fresh cucumber, and lime with a touch of rosemary",
         "price": "18.00",
         "category": "beverages",
@@ -150,11 +150,11 @@ menu_items = [
 
 hotel_info = {
     "id": 1,
-    "name": "Gloria Regency Hotel",
-    "description": "Experience unparalleled luxury and elegance at Gloria Regency Hotel, where sophisticated accommodations meet world-class service. Located in the heart of the city, our hotel offers breathtaking views, exquisite dining, and premium amenities for the discerning traveler.",
+    "name": "Park Palace Hotel",
+    "description": "Experience unparalleled luxury and elegance at Park Palace Hotel, where sophisticated accommodations meet world-class service. Located in the heart of the city, our hotel offers breathtaking views, exquisite dining, and premium amenities for the discerning traveler.",
     "address": "123 Luxury Boulevard, Metropolitan District, MC 10001",
     "phone": "+1 (555) 123-4567",
-    "email": "reservations@gloriaregency.com",
+    "email": "reservations@parkpalace.com",
     "checkInTime": "3:00 PM",
     "checkOutTime": "12:00 PM",
     "amenities": [
