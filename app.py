@@ -192,3 +192,79 @@ app.route("/api/rooms/featured")
 def get_featured_rooms():
   featured_rooms = [room for room in rooms_data if room.get("featured", False)]
   return jsonify(featured_rooms)
+
+@app.route("/api/rooms")
+def get_all_rooms():
+  return jsonify(rooms_data)
+
+@app.route("/api/rooms/<int:room_id>")
+def get_room(room_id):
+  room = next((room for room in rooms_data if room["id"] == room_id), None)
+  if room:
+    return jsonify(room)
+  return jsonify({"error": "Room not found"}), 404
+
+@app.route("/api/menu")
+def get_menu():
+  return jsonify(menu_items)
+
+app.route("/api/menu/category/<category>")
+def get_menu_by_category(category):
+  category_items = [item for item in menu_items if item["category"] == category]
+  return jsonify(category_items)
+
+@app.route("/api/hotel")
+def get_hotel_info():
+    return jsonify(hotel_info)
+
+@app.route("/api/bookings", methods=["POST"])
+def create_booking():
+    try:
+        booking_data = request.get_json()
+        
+        if not booking_data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        # Validation
+        required_fields = ["roomId", "firstName", "lastName", "email", "phone", "checkIn", "checkOut", "guests"]
+        for field in required_fields:
+            if field not in booking_data:
+                return jsonify ({"error": f"Missing required field {field}"}), 400
+            
+            # Find the room
+            room = next((room for room in rooms_data if room["id"] == booking_data["roomId"]), None)
+            if not room:
+                return jsonify({"error": "Room not found"}), 404
+            
+            # Create booking
+            booking = {
+                "id": len(bookings) + 1,
+                "roomId": booking_data["roomId"],
+                "firstName": booking_data["firstName"],
+                "lastName": booking_data["lastName"],
+                "email": booking_data["email"],
+                "phone": booking_data["phone"],
+                "checkIn": booking_data["checkIn"],
+                "checkOut": booking_data["checkOut"],
+                "guests": booking_data["guests"],
+                "paymentMethod": booking_data.get("paymentMethod", "pending"),
+                "paymentStatus": "pending",
+                "createdAt": datetime.now().isoformat(),
+                "totalAmount": room["price"]
+            }
+            
+            bookings.append(booking)
+            return jsonify(booking), 201
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to create booking{e}"}), 500
+    
+@app.route("/api/bookings/<int:booking_id>")
+def get_booking(booking_id):
+    booking = next((booking for booking in bookings if booking['id'] == booking_id), None)
+    if booking:
+        return jsonify(booking)
+    return jsonify({'error': 'Booking not found'}), 404
+
+if __name__ == "main":
+    app.run(port=5000, debug=True)
