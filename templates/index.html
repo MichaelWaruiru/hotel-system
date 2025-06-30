@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="home" class="hero-section">
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <h1 class="display-3 fw-bold text-white mb-4">Welcome to Park Palace Hotel</h1>
+                    <p class="lead text-white-50 mb-5">
+                        Experience unparalleled luxury and elegance in the heart of the city, where sophisticated accommodations meet world-class service
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                        <a href="#rooms" class="btn btn-primary btn-lg px-4">Explore Our Rooms</a>
+                        <a href="#about" class="btn btn-outline-light btn-lg px-4">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rooms Section -->
+<section id="rooms" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Our Signature Accommodations</h2>
+            <p class="lead text-muted">Discover the finest rooms and suites at Park Palace Hotel, each designed for ultimate comfort and luxury</p>
+        </div>
+        
+        <div id="rooms-container" class="row">
+            <!-- Rooms will be loaded here by JavaScript -->
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading rooms...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dining Section -->
+<section id="dining" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Culinary Excellence at Park Palace</h2>
+            <p class="lead text-muted">Experience world-class dining with our curated menu featuring international cuisine, locally sourced ingredients, and masterful culinary artistry.</p>
+        </div>
+
+        <!-- Menu Categories -->
+        <ul class="nav nav-pills justify-content-center mb-4" id="menuTabs">
+            <li class="nav-item">
+                <button class="nav-link active" data-category="breakfast">🥐 Breakfast</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-category="lunch">🥗 Lunch</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-category="dinner">🥩 Dinner</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-category="beverages">🍷 Beverages</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-category="desserts">🍰 Desserts</button>
+            </li>
+        </ul>
+
+        <!-- Menu Items -->
+        <div id="menu-container" class="row">
+            <!-- Menu items will be loaded here by JavaScript -->
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading menu...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dining Information -->
+        <div class="row mt-5 bg-light rounded p-4">
+            <div class="col-md-4 text-center mb-4">
+                <i class="bi bi-clock fs-2 text-primary mb-3"></i>
+                <h5 class="fw-bold">Dining Hours</h5>
+                <p class="text-muted mb-0">
+                    Breakfast: 6:30 AM - 9:30 AM<br>
+                    Lunch: 12:00 PM - 3:00 PM<br>
+                    Dinner: 6:00 PM - 10:30 PM
+                </p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <i class="bi bi-people fs-2 text-primary mb-3"></i>
+                <h5 class="fw-bold">Reservations</h5>
+                <p class="text-muted mb-0">
+                    Call +1 (555) 123-4567 ext. 2<br>
+                    or book through concierge<br>
+                    Advance booking recommended
+                </p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <i class="bi bi-heart fs-2 text-primary mb-3"></i>
+                <h5 class="fw-bold">Special Diets</h5>
+                <p class="text-muted mb-0">
+                    Vegetarian, Vegan & Gluten-Free<br>
+                    options available<br>
+                    Please inform staff of allergies
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Amenities Section -->
+<section id="amenities" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Park Palace Amenities</h2>
+            <p class="lead text-muted">Indulge in our comprehensive range of luxury amenities and world-class facilities designed to enhance every moment of your stay</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" class="card-img-top" alt="Spa & Wellness">
+                    <div class="card-body">
+                        <h5 class="card-title">Spa & Wellness</h5>
+                        <p class="card-text">Rejuvenate with our full-service spa, infinity pool, and state-of-the-art fitness center.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" class="card-img-top" alt="Fine Dining">
+                    <div class="card-body">
+                        <h5 class="card-title">Fine Dining</h5>
+                        <p class="card-text">Experience culinary excellence at our award-winning restaurants and rooftop bar.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" class="card-img-top" alt="Business Center">
+                    <div class="card-body">
+                        <h5 class="card-title">Business Center</h5>
+                        <p class="card-text">Fully equipped meeting rooms and business facilities for the modern traveler.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" class="card-img-top" alt="Concierge Service">
+                    <div class="card-body">
+                        <h5 class="card-title">Concierge Service</h5>
+                        <p class="card-text">24/7 personalized service to help you make the most of your stay and local area.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hotel Information Section -->
+<section id="about" class="py-5">
+    <div class="container" id="hotel-info-container">
+        <!-- Hotel information will be loaded here by JavaScript -->
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading hotel information...</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Badges Section -->
+<section class="py-4 bg-primary">
+    <div class="container">
+        <div class="row text-center text-white">
+            <div class="col-md-3 mb-3">
+                <i class="bi bi-award fs-1 mb-2"></i>
+                <h6 class="fw-bold">5-Star Luxury</h6>
+                <small>Award-winning service and accommodations</small>
+            </div>
+            <div class="col-md-3 mb-3">
+                <i class="bi bi-shield-check fs-1 mb-2"></i>
+                <h6 class="fw-bold">Secure Booking</h6>
+                <small>Safe and encrypted reservation system</small>
+            </div>
+            <div class="col-md-3 mb-3">
+                <i class="bi bi-headset fs-1 mb-2"></i>
+                <h6 class="fw-bold">24/7 Support</h6>
+                <small>Round-the-clock customer assistance</small>
+            </div>
+            <div class="col-md-3 mb-3">
+                <i class="bi bi-geo-alt fs-1 mb-2"></i>
+                <h6 class="fw-bold">Prime Location</h6>
+                <small>Heart of the metropolitan district</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Book Your Stay</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="checkIn" class="form-label">Check-in Date</label>
+                            <input type="date" class="form-control" id="checkIn" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="checkOut" class="form-label">Check-out Date</label>
+                            <input type="date" class="form-control" id="checkOut" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="guests" class="form-label">Guests</label>
+                            <select class="form-select" id="guests" required>
+                                <option value="1">1 Guest</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5 Guests</option>
+                                <option value="6">6 Guests</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method</label>
+                        <select class="form-select" id="paymentMethod" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="card">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="mpesa">M-Pesa</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="roomId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submitBooking">Book Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
