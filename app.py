@@ -22,7 +22,7 @@ def init_db():
 def index():
   return render_template("index.html")
 
-app.route("/api/rooms/featured")
+@app.route("/api/rooms/featured")
 def get_featured_rooms():
   featured_rooms = Room.query.filter_by(featured=True).all()
   return jsonify([serialize_room(room) for room in featured_rooms])
@@ -44,7 +44,7 @@ def get_menu():
   menu_items = MenuItem.query.all()
   return jsonify([serialize_menu_item(item) for item in menu_items])
 
-app.route("/api/menu/category/<category>")
+@app.route("/api/menu/category/<category>")
 def get_menu_by_category(category):
   items = MenuItem.query.filter_by(category=category).all()
   return jsonify([serialize_menu_item(item) for item in items])

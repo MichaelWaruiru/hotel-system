@@ -67,7 +67,7 @@ class ParkPalaceApp {
       container.innerHTML = rooms.map(room => `
           <div class="col-lg-4 col-md-6 mb-4">
               <div class="card room-card h-100 fade-in">
-                  <img src="${room.imageUrl}" class="card-img-top" alt="${room.name}">
+                  <img src="/static/${room.imageUrl}" class="card-img-top" alt="${room.name}">
                   <div class="card-body d-flex flex-column">
                       <div class="d-flex justify-content-between align-items-start mb-2">
                           <h5 class="card-title">${room.name}</h5>
@@ -124,7 +124,7 @@ class ParkPalaceApp {
       container.innerHTML = menuItems.map(item => `
           <div class="col-lg-4 col-md-6 mb-4">
               <div class="card menu-item-card fade-in">
-                  <img src="${item.imageUrl}" class="card-img-top" alt="${item.name}">
+                  <img src="/static/${item.imageUrl}" class="card-img-top" alt="${item.name}">
                   <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-2">
                           <h6 class="card-title">${item.name}</h6>
