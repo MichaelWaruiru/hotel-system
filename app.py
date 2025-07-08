@@ -1,188 +1,22 @@
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime
-import os
-from dotenv import load_dotenv
+from config import Config
+from flask_migrate import Migrate
+from models import db, Booking, MenuItem, Room
 
-load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "park-palace-hotel-secret-key")
+app.config.from_object(Config)
+db.init_app(app)
+migrate = Migrate(app, db)
 
+@app.cli.command("init-db")
+def init_db():
+    """Create database tables."""
+    with app.app_context():
+        db.create_all()
+        print("✅ Database tables created!")
 
-rooms_data = [
-    {
-        "id": 1,
-        "name": "Executive Suite",
-        "description": "Spacious executive suite with panoramic city views, marble bathroom, and premium amenities for the discerning business traveler.",
-        "price": "450.00",
-        "imageUrl": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "capacity": 4,
-        "size": "75 sqm",
-        "amenities": ["King Bed", "City View", "Marble Bathroom", "Work Desk", "Mini Bar", "Premium WiFi"],
-        "featured": True
-    },
-    {
-        "id": 2,
-        "name": "Luxury Ocean View",
-        "description": "Elegant oceanfront suite featuring floor-to-ceiling windows, private balcony, and world-class spa amenities.",
-        "price": "650.00",
-        "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "capacity": 2,
-        "size": "85 sqm",
-        "amenities": ["Ocean View", "Private Balcony", "Jacuzzi", "Butler Service", "Premium Minibar"],
-        "featured": True
-    },
-    {
-        "id": 3,
-        "name": "Presidential Suite",
-        "description": "Our crown jewel offering unmatched luxury with separate living areas, private dining room, and dedicated concierge service.",
-        "price": "1200.00",
-        "imageUrl": "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "capacity": 6,
-        "size": "150 sqm",
-        "amenities": ["Separate Living Room", "Private Dining", "Concierge Service", "Premium Bar", "City Panorama"],
-        "featured": True
-    }
-]
-
-menu_items = [
-    {
-        "id": 1,
-        "name": "Park Palace Signature Breakfast",
-        "description": "Traditional breakfast with eggs benedict, artisan breads, fresh fruits, and premium coffee",
-        "price": "28.00",
-        "category": "breakfast",
-        "imageUrl": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegetarian"],
-        "available": True
-    },
-    {
-        "id": 2,
-        "name": "Healthy Power Bowl",
-        "description": "Quinoa, avocado, fresh berries, nuts, and organic honey drizzle",
-        "price": "24.00",
-        "category": "breakfast",
-        "imageUrl": "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegan", "gluten-free"],
-        "available": True
-    },
-    {
-        "id": 3,
-        "name": "Mediterranean Grilled Salmon",
-        "description": "Fresh Atlantic salmon with roasted vegetables, quinoa, and lemon herb sauce",
-        "price": "42.00",
-        "category": "lunch",
-        "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["gluten-free"],
-        "available": True
-    },
-    {
-        "id": 4,
-        "name": "Truffle Pasta Primavera",
-        "description": "House-made pasta with seasonal vegetables, truffle oil, and parmesan",
-        "price": "38.00",
-        "category": "lunch",
-        "imageUrl": "https://images.unsplash.com/photo-1563379091339-03246963d7d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegetarian"],
-        "available": True
-    },
-    {
-        "id": 5,
-        "name": "Park Palace Wagyu Steak",
-        "description": "Premium A5 Wagyu beef with roasted potatoes, seasonal vegetables, and red wine reduction",
-        "price": "85.00",
-        "category": "dinner",
-        "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": [],
-        "available": True
-    },
-    {
-        "id": 6,
-        "name": "Lobster Thermidor",
-        "description": "Fresh lobster in cognac cream sauce, gruyere cheese, served with herb rice",
-        "price": "68.00",
-        "category": "dinner",
-        "imageUrl": "https://images.unsplash.com/photo-1559847844-d98a29d0c27f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["gluten-free"],
-        "available": True
-    },
-    {
-        "id": 7,
-        "name": "Park Palace Signature Cocktail",
-        "description": "Premium gin, elderflower, fresh cucumber, and lime with a touch of rosemary",
-        "price": "18.00",
-        "category": "beverages",
-        "imageUrl": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegan"],
-        "available": True
-    },
-    {
-        "id": 8,
-        "name": "Vintage Wine Selection",
-        "description": "Curated selection of premium wines from our cellar, paired with artisan cheeses",
-        "price": "65.00",
-        "category": "beverages",
-        "imageUrl": "https://images.unsplash.com/photo-1474722883778-792e7990302f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegetarian"],
-        "available": True
-    },
-    {
-        "id": 9,
-        "name": "Chocolate Lava Cake",
-        "description": "Warm chocolate cake with molten center, vanilla ice cream, and berry compote",
-        "price": "16.00",
-        "category": "desserts",
-        "imageUrl": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegetarian"],
-        "available": True
-    },
-    {
-        "id": 10,
-        "name": "Tiramisu Royale",
-        "description": "Classic Italian tiramisu with ladyfingers, mascarpone, and espresso",
-        "price": "14.00",
-        "category": "desserts",
-        "imageUrl": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-        "dietary": ["vegetarian"],
-        "available": True
-    }
-]
-
-hotel_info = {
-    "id": 1,
-    "name": "Park Palace Hotel",
-    "description": "Experience unparalleled luxury and elegance at Park Palace Hotel, where sophisticated accommodations meet world-class service. Located in the heart of the city, our hotel offers breathtaking views, exquisite dining, and premium amenities for the discerning traveler.",
-    "address": "123 Luxury Boulevard, Metropolitan District, MC 10001",
-    "phone": "+1 (555) 123-4567",
-    "email": "reservations@parkpalace.com",
-    "checkInTime": "3:00 PM",
-    "checkOutTime": "12:00 PM",
-    "amenities": [
-        "24/7 Concierge Service",
-        "Luxury Spa & Wellness Center",
-        "Rooftop Infinity Pool",
-        "State-of-the-Art Fitness Center",
-        "Fine Dining Restaurant",
-        "Business Center",
-        "Valet Parking",
-        "Room Service",
-        "Laundry & Dry Cleaning",
-        "Airport Transfer Service",
-        "Meeting & Event Facilities",
-        "Complimentary WiFi"
-    ],
-    "policies": [
-        "Check-in: 3:00 PM | Check-out: 12:00 PM",
-        "Cancellation: Free cancellation up to 24 hours before arrival",
-        "Pet Policy: Pets welcome with advance notice (additional fees apply)",
-        "Smoking: Designated smoking areas only - all rooms are non-smoking",
-        "Age Requirement: Guests must be 18+ to check in",
-        "Additional Guests: Maximum occupancy as specified per room type",
-        "Damage Policy: Guests are responsible for any damages to hotel property"
-    ]
-}
-
-bookings = []
 
 @app.route("/")
 def index():
@@ -190,81 +24,117 @@ def index():
 
 app.route("/api/rooms/featured")
 def get_featured_rooms():
-  featured_rooms = [room for room in rooms_data if room.get("featured", False)]
-  return jsonify(featured_rooms)
+  featured_rooms = Room.query.filter_by(featured=True).all()
+  return jsonify([serialize_room(room) for room in featured_rooms])
 
 @app.route("/api/rooms")
 def get_all_rooms():
-  return jsonify(rooms_data)
+  rooms = Room.query.all()
+  return jsonify([serialize_room(room) for room in rooms])
 
 @app.route("/api/rooms/<int:room_id>")
 def get_room(room_id):
-  room = next((room for room in rooms_data if room["id"] == room_id), None)
+  room = Room.query.get(room_id)
   if room:
-    return jsonify(room)
+    return jsonify(serialize_room(room))
   return jsonify({"error": "Room not found"}), 404
 
 @app.route("/api/menu")
 def get_menu():
-  return jsonify(menu_items)
+  menu_items = MenuItem.query.all()
+  return jsonify([serialize_menu_item(item) for item in menu_items])
 
 app.route("/api/menu/category/<category>")
 def get_menu_by_category(category):
-  category_items = [item for item in menu_items if item["category"] == category]
-  return jsonify(category_items)
+  items = MenuItem.query.filter_by(category=category).all()
+  return jsonify([serialize_menu_item(item) for item in items])
 
-@app.route("/api/hotel")
-def get_hotel_info():
-    return jsonify(hotel_info)
+# @app.route("/api/hotel")
+# def get_hotel_info():
+#     return jsonify(hotel_info)
 
 @app.route("/api/bookings", methods=["POST"])
 def create_booking():
-    try:
-        booking_data = request.get_json()
-        
-        if not booking_data:
-            return jsonify({"error": "No data provided"}), 400
-        
-        # Validation
-        required_fields = ["roomId", "firstName", "lastName", "email", "phone", "checkIn", "checkOut", "guests"]
-        for field in required_fields:
-            if field not in booking_data:
-                return jsonify ({"error": f"Missing required field {field}"}), 400
-            
-            # Find the room
-            room = next((room for room in rooms_data if room["id"] == booking_data["roomId"]), None)
-            if not room:
-                return jsonify({"error": "Room not found"}), 404
-            
-            # Create booking
-            booking = {
-                "id": len(bookings) + 1,
-                "roomId": booking_data["roomId"],
-                "firstName": booking_data["firstName"],
-                "lastName": booking_data["lastName"],
-                "email": booking_data["email"],
-                "phone": booking_data["phone"],
-                "checkIn": booking_data["checkIn"],
-                "checkOut": booking_data["checkOut"],
-                "guests": booking_data["guests"],
-                "paymentMethod": booking_data.get("paymentMethod", "pending"),
-                "paymentStatus": "pending",
-                "createdAt": datetime.now().isoformat(),
-                "totalAmount": room["price"]
-            }
-            
-            bookings.append(booking)
-            return jsonify(booking), 201
-        
-    except Exception as e:
-        return jsonify({"error": "Failed to create booking{e}"}), 500
+  try:
+    data = request.get_json()
+    required_fields = ["roomId", "firstName", "lastName", "email", "phone", "checkIn", "checkOut", "guests"]
+    for field in required_fields:
+      if field not in data:
+        return jsonify({"error": f"Missing required field {field}"}), 400
+
+      room = Room.query.get(data["roomId"])
+      if not room:
+        return jsonify({"error": "Room not found"}), 404
+
+      booking = Booking(
+        room_id=room.id,
+        first_name=data["firstName"],
+        last_name=data["lastName"],
+        email=data["email"],
+        phone=data["phone"],
+        check_in=datetime.strptime(data["checkIn"], "%Y-%m-%d"),
+        check_out=datetime.strptime(data["checkOut"], "%Y-%m-%d"),
+        guests=int(data["guests"]),
+        payment_method=data.get("paymentMethod"),
+        total_amount=room.price,
+        payment_status="pending"
+      )
+      db.session.add(booking)
+      db.session.commit()
+
+      return jsonify(serialize_booking(booking)), 201
+  except Exception as e:
+      return jsonify({"error": f"Failed to create booking: {str(e)}"})
     
 @app.route("/api/bookings/<int:booking_id>")
 def get_booking(booking_id):
-    booking = next((booking for booking in bookings if booking['id'] == booking_id), None)
+    booking = Booking.query.get(booking_id)
     if booking:
-        return jsonify(booking)
+      return jsonify(serialize_booking(booking))
     return jsonify({'error': 'Booking not found'}), 404
+  
+# Serialization helpers
+def serialize_room(room):
+  return {
+    "id": room.id,
+    "name": room.name,
+    "description": room.description,
+    "price": f"{room.price:.2f}",
+    "imageUrl": room.image_url,
+    "capacity": room.capacity,
+    "size": room.size,
+    "amenities": room.amenities.split(",") if room.amenities else [],
+    "featured": room.featured
+  }
+
+def serialize_booking(booking):
+  return {
+    "id": booking.id,
+    "roomId": booking.room_id,
+    "firstName": booking.first_name,
+    "lastName": booking.last_name,
+    "email": booking.email,
+    "phone": booking.phone,
+    "checkIn": booking.check_in.strftime("%Y-%m-%d"),
+    "checkOut": booking.check_out.strftime("%Y-%m-%d"),
+    "guests": booking.guests,
+    "paymentMethod": booking.payment_method,
+    "paymentStatus": booking.payment_status,
+    "createdAt": booking.created_at.isoformat(),
+    "totalAmount": f"{booking.total_amount:.2f}"
+  }
+
+def serialize_menu_item(item):
+  return {
+    "id": item.id,
+    "name": item.name,
+    "description": item.description,
+    "price": f"{item.price:.2f}",
+    "category": item.category,
+    "imageUrl": item.image_url,
+    "dietary": item.dietary.split(",") if item.dietary else [],
+    "available": item.available
+  }
 
 if __name__ == "main":
     app.run(port=5000, debug=True)
