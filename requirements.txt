@@ -3,3 +3,7 @@ Flask-SQLAlchemy
 Flask-Migrate
 mysqlclient
 python-dotenv
+Flask-Admin
+Flask-Login
+Flask-WTF
+Werkzeug

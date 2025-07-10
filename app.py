@@ -1,14 +1,25 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from datetime import datetime
 from config import Config
 from flask_migrate import Migrate
-from models import db, Booking, MenuItem, Room
+from models import db, Booking, MenuItem, Room, User
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_admin import Admin, AdminIndexView, expose
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.form import ImageUploadField
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
+
+# Flask-Login setup
+login_manager = LoginManager(app)
+login_manager.login_view = "admin_login"
+
 
 @app.cli.command("init-db")
 def init_db():
@@ -17,6 +28,106 @@ def init_db():
         db.create_all()
         print("✅ Database tables created!")
 
+
+@login_manager.user_loader
+def load_user(user_id):
+  return User.query.get(int(user_id))
+
+
+# Admin auth
+class MyAdminIndexView(AdminIndexView):
+  @expose("/")
+  def index(self):
+    if not current_user.is_authenticated:
+      return redirect(url_for("admin_login"))
+    return super().index()
+  
+  def is_accessible(self):
+    return current_user.is_authenticated
+  
+  def inaccessible_callback(self, name, **kwargs):
+    return redirect(url_for("admin_login"))
+  
+class SecureModelView(ModelView):
+  def is_accessible(self):
+    return current_user.is_authenticated
+  
+  def inaccessible_callback(self):
+    return redirect(url_for("admin_login"))
+  
+# Image upload helpers
+def room_image_path(file_data):
+  return f"images/rooms/{file_data.filename}"
+
+def menu_image_path(file_data):
+  return f"images/menu/{file_data.filename}"
+
+
+class RoomModelView(SecureModelView):
+  column_searchable_list = ["name", "description"]
+  column_filters = ["featured"]
+  form_overrides = dict(image_url=ImageUploadField)
+  form_args = dict(
+    image_url=dict(
+      label="Room Image",
+      base_path=os.path.join(os.path.dirname(__file__), "static/images/rooms"),
+      relative_path="images/rooms/",
+      allow_overwrite=False,
+      max_size=(800, 600, True)
+    )
+  )
+  form_columns = ["name", "description", "price", "image_url", "capacity", "size", "amenities", "featured"]
+
+
+class MenuItemModelView(SecureModelView):
+  column_searchable_list = ["name", "description", "category"]
+  column_filters = ["category", "available"]
+  form_overrides = dict(image_url=ImageUploadField)
+  form_args = dict(
+    image_url=dict(
+      label="Menu Image",
+      base_path=os.path.join(os.path.dirname(__file__), "static/images/menu"),
+      relative_path="images/menu",
+      allow_overwrite=False,
+      max_size=(800, 600, True)
+    )
+  )
+  form_columns = ["name", "description", "price", "category", "image_url", "dietary", "available"]
+  
+admin = Admin(
+  app,
+  name="Park Palace Admin",
+  template_mode="bootstrap4",
+  index_view=MyAdminIndexView()
+)
+admin.add_view(RoomModelView(Room, db.session, category="Hotel"))
+admin.add_view(MenuItemModelView(MenuItem, db.session, category="Hotel"))
+admin.add_view(SecureModelView(Booking, db.session, category="Hotel"))
+admin.add_view(SecureModelView(User, db.session, category="Users"))
+
+# Admin login/logout routes
+@app.route("/admin/login", methods=["Get", "POST"])
+def admin_login():
+  if current_user.is_authenticated:
+    return redirect(url_for("/admin"))
+  if request.method == "POST":
+    username = request.form["username"]
+    password = request.form["password"]
+    user = User.query.filter_by(username=username).first()
+    if user and check_password_hash(user.password_hash, password):
+      login_user(user)
+      flash("Logged in successfully", "success")
+      return redirect("/admin")
+    else:
+      flash("Invalid username or password", "danger")
+      return render_template("admin.html")
+  return render_template("admin.html")
+
+@app.route("/admin/logout")
+def admin_logout():
+  logout_user()
+  flash("Logged out.", "info")
+  return redirect(url_for("admin_login"))
 
 @app.route("/")
 def index():

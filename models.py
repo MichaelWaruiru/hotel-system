@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -39,3 +40,8 @@ class MenuItem(db.Model):
   image_url = db.Column(db.String(256))
   dietary = db.Column(db.String(128))  # comma-separated
   available = db.Column(db.Boolean, default=True)
+  
+class User(UserMixin, db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(64), unique=True, nullable=False)
+  password_hash = db.Column(db.Text, nullable=False)
