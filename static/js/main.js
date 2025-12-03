@@ -228,7 +228,7 @@ class ParkPalaceApp {
                   Our dedicated team is ready to make your visit unforgettable.
               </p>
               <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                  <a href="tel:+15551234567" class="btn btn-primary">
+                  <a href="tel:+211-712-345-678" class="btn btn-primary">
                       <i class="bi bi-telephone me-2"></i>Call Now
                   </a>
                   <a href="mailto:reservations@parkpalace.com" class="btn btn-outline-primary">
