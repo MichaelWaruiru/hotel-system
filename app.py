@@ -97,7 +97,7 @@ class MenuItemModelView(SecureModelView):
 admin = Admin(
   app,
   name="Park Palace Admin",
-  template_mode="bootstrap4",
+  # template_mode="bootstrap4",
   index_view=MyAdminIndexView()
 )
 admin.add_view(RoomModelView(Room, db.session, category="Hotel"))
