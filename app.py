@@ -164,8 +164,8 @@ def get_menu_by_category(category):
 def get_hotel_info():
     hotel_info = {
         "name": "Park Palace Hotel",
-        "address": "123 Main Street, Bor",
-        "phone": "+1 234 567 890",
+        "address": "123 Bor, Jonglei State, South Sudan",
+        "phone": "+211-712-345-678",
         "email": "info@parkpalacehotel.com",
         "description": "A luxurious hotel offering the best amenities and services.",
         
