@@ -167,7 +167,26 @@ def get_hotel_info():
         "address": "123 Main Street, Bor",
         "phone": "+1 234 567 890",
         "email": "info@parkpalacehotel.com",
-        "description": "A luxurious hotel offering the best amenities and services."
+        "description": "A luxurious hotel offering the best amenities and services.",
+        
+        # Added fields your frontend requires
+        "checkInTime": "2:00 PM",
+        "checkOutTime": "11:00 AM",
+        "amenities": [
+            "Free Wi-Fi",
+            "Swimming Pool",
+            "Spa & Wellness Center",
+            "Fitness Center",
+            "24/7 Room Service",
+            "Restaurant & Bar",
+            "Airport Shuttle"
+        ],
+        "policies": [
+            "No smoking inside the rooms",
+            "Pets allowed upon request",
+            "Valid ID required at check-in",
+            "Early check-in subject to availability"
+        ]
     }
     return jsonify(hotel_info)
 
