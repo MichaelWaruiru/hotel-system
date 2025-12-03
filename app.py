@@ -160,9 +160,16 @@ def get_menu_by_category(category):
   items = MenuItem.query.filter_by(category=category).all()
   return jsonify([serialize_menu_item(item) for item in items])
 
-# @app.route("/api/hotel")
-# def get_hotel_info():
-#     return jsonify(hotel_info)
+@app.route("/api/hotel")
+def get_hotel_info():
+    hotel_info = {
+        "name": "Park Palace Hotel",
+        "address": "123 Main Street, Bor",
+        "phone": "+1 234 567 890",
+        "email": "info@parkpalacehotel.com",
+        "description": "A luxurious hotel offering the best amenities and services."
+    }
+    return jsonify(hotel_info)
 
 @app.route("/api/bookings", methods=["POST"])
 def create_booking():
@@ -247,5 +254,5 @@ def serialize_menu_item(item):
     "available": item.available
   }
 
-if __name__ == "main":
+if __name__ == "__main__":
     app.run(port=5000, debug=True)
