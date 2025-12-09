@@ -395,3 +395,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 });
+
+// Updates year range automatically
+const startYear = 2021;
+const currentYear = new Date().getFullYear();
+document.getElementById("year-range").textContent = startYear === currentYear ? `${startYear}` : `${startYear} - ${currentYear}`;
