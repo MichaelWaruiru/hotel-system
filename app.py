@@ -125,8 +125,8 @@ def admin_login():
   if current_user.is_authenticated:
     return redirect("/admin")
   if request.method == "POST":
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.form.get("username")
+    password = request.form.get("password")
     user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password_hash, password):
       login_user(user)
