@@ -120,10 +120,10 @@ admin.add_view(SecureModelView(Booking, db.session, category="Hotel"))
 admin.add_view(UserModelView(User, db.session, category="Users"))
 
 # Admin login/logout routes
-@app.route("/admin/login", methods=["Get", "POST"])
+@app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
   if current_user.is_authenticated:
-    return redirect(url_for("/admin"))
+    return redirect("/admin")
   if request.method == "POST":
     username = request.form["username"]
     password = request.form["password"]
