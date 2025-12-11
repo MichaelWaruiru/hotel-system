@@ -7,7 +7,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import ImageUploadField
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
+from wtforms.fields import PasswordField
 import os
 
 
@@ -54,6 +55,19 @@ class SecureModelView(ModelView):
   
   def inaccessible_callback(self):
     return redirect(url_for("admin_login"))
+  
+class UserModelView(SecureModelView):
+  form_extra_fields = {
+    "password": PasswordField("Password")
+  }
+  
+  form_columns = ["username", "password"] # Only show username and password fields
+  
+  def on_model_change(self, form, model, is_created):
+    # Hash only if admin entered a password
+    if form.password.data:
+      model.set_password(form.password.data)
+  
   
 # Image upload helpers
 def room_image_path(file_data):
@@ -103,7 +117,7 @@ admin = Admin(
 admin.add_view(RoomModelView(Room, db.session, category="Hotel"))
 admin.add_view(MenuItemModelView(MenuItem, db.session, category="Hotel"))
 admin.add_view(SecureModelView(Booking, db.session, category="Hotel"))
-admin.add_view(SecureModelView(User, db.session, category="Users"))
+admin.add_view(UserModelView(User, db.session, category="Users"))
 
 # Admin login/logout routes
 @app.route("/admin/login", methods=["Get", "POST"])
