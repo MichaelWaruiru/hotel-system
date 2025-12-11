@@ -26,7 +26,7 @@ def init_db():
     """Create database tables."""
     with app.app_context():
         db.create_all()
-        print("✅ Database tables created!")
+        print("Database tables created!")
 
 
 @login_manager.user_loader
@@ -169,7 +169,7 @@ def get_hotel_info():
         "email": "info@parkpalacehotel.com",
         "description": "A luxurious hotel offering the best amenities and services.",
         
-        # Added fields your frontend requires
+        # Add fields frontend requires
         "checkInTime": "2:00 PM",
         "checkOutTime": "11:00 AM",
         "amenities": [
