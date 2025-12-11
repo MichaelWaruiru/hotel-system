@@ -3,7 +3,7 @@ from datetime import datetime
 from config import Config
 from flask_migrate import Migrate
 from models import db, Booking, MenuItem, Room, User
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user, logout_user, current_user
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import ImageUploadField
